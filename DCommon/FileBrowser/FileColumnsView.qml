@@ -443,6 +443,7 @@ Item {
                 width: columns.columnWidth - Style.dividerWidth
                 selection: column.active ? columns.body.selection : column.ownSelection
                 iconSize: columns.body.iconSize
+                zoom: columns.body.zoom
                 renamingPath: column.active ? columns.body.renamingPath : ""
                 cutSet: columns.body.cutSet
                 columnIds: []
@@ -569,13 +570,14 @@ Item {
                 cursorShape: Qt.SizeHorCursor
                 acceptedButtons: Qt.LeftButton
                 onPressed: mouse => {
-                    pressX = mapToItem(null, mouse.x, 0).x;
+                    pressX = mouse.x;
                     pressWidth = columns.columnWidth;
                 }
                 onPositionChanged: mouse => {
                     if (!pressed)
                         return;
-                    const moved = mapToItem(null, mouse.x, 0).x - pressX;
+                    const widthDelta = columns.columnWidth - pressWidth;
+                    const moved = (column.depth + 1) * widthDelta + (mouse.x - pressX);
                     columns.body.columnPaneResizeRequested(pressWidth + (columns.mirrored ? -moved : moved));
                 }
             }
