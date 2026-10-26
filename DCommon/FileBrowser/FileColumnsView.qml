@@ -570,15 +570,14 @@ Item {
                 cursorShape: Qt.SizeHorCursor
                 acceptedButtons: Qt.LeftButton
                 onPressed: mouse => {
-                    pressX = mouse.x;
+                    pressX = mapToItem(null, mouse.x, 0).x;
                     pressWidth = columns.columnWidth;
                 }
                 onPositionChanged: mouse => {
                     if (!pressed)
                         return;
-                    const widthDelta = columns.columnWidth - pressWidth;
-                    const moved = (column.depth + 1) * widthDelta + (mouse.x - pressX);
-                    columns.body.columnPaneResizeRequested(pressWidth + (columns.mirrored ? -moved : moved));
+                    const delta = (mapToItem(null, mouse.x, 0).x - pressX) / (column.depth + 1);
+                    columns.body.columnPaneResizeRequested(pressWidth + (columns.mirrored ? -delta : delta));
                 }
             }
         }
